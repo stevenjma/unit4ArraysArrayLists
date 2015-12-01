@@ -177,7 +177,7 @@ public class ArrayMethods
         boolean isTrue = false;
         for (int i = 0; i <= values.length; i++)
         {
-            for (int num = 0; i <= values.length; num++)
+            for (int num = 0; num <= values.length; num++)
             {
                 if (values[i] == values[num])
                 {
