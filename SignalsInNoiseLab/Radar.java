@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 /**
  * The model for radar scan and accumulator
  * 
@@ -16,8 +16,8 @@ public class Radar
     private int[][] accumulator;
     
     // location of the monster
-    private int monsterLocationRow;
-    private int monsterLocationCol;
+    private ArrayList<Integer> monsterLocationRows = new ArrayList<Integer>();
+    private ArrayList<Integer> monsterLocationCols = new ArrayList<Integer>();
 
     // probability that a cell will trigger a false detection (must be >= 0 and < 1)
     private double noiseFraction;
@@ -34,17 +34,30 @@ public class Radar
     public Radar(int rows, int cols)
     {
         // initialize the currentScan 2D array and the accumulator 2D array
-        
+        currentScan = new boolean [rows] [cols];
+        accumulator = new int [rows] [cols];
         
         //
-        // !!! add code here !!!
+        monsterLocationRows.add((int) (Math.random() * rows));
+        monsterLocationCols.add((int) (Math.random() * cols));
         //
+
         
+        noiseFraction = 0.05;
+        numScans= 0;
+    }
+    
+    public Radar(int rows, int cols, int monsterRow, int monsterCol)
+    {
+        // initialize the currentScan 2D array and the accumulator 2D array
+        currentScan = new boolean [rows] [cols];
+        accumulator = new int [rows] [cols];
         
-        // randomly set the location of the monster (can be explicity set through the
-        //  setMonsterLocation method for the unit test
-        monsterLocationRow = (int)(Math.random() * rows);
-        monsterLocationCol = (int)(Math.random() * cols);
+        //
+        monsterLocationRows.add(monsterRow);
+        monsterLocationCols.add(monsterCol);
+        //
+
         
         noiseFraction = 0.05;
         numScans= 0;
@@ -62,13 +75,28 @@ public class Radar
         //    3. inject noise into the grid
         //    4. update the accumulator 2D array based on the state of the currentScan 2D array
         //    5. increment the numScans instance variable
+        for (int i = 0; i < currentScan.length; i++)
+        {
+            for (int j = 0; j < currentScan[i].length; j++)
+            {
+                    currentScan[i][j] = false;
+            }
+        }
+        this.summonMonsters();
+        this.injectNoise();
         
+        for (int i = 0; i < accumulator.length; i++)
+        {
+            for (int j = 0; j < accumulator[i].length; j++)
+            {
+                if (currentScan[i][j])
+                {
+                    accumulator[i][j] += 1;
+                }
+            }
+        }
         
-        //
-        // !!! add code here !!!
-        //
-        
-        
+        numScans++;
     }
 
     /**
@@ -81,11 +109,15 @@ public class Radar
     public void setMonsterLocation(int row, int col)
     {
         // remember the row and col of the monster's location
-        monsterLocationRow = row;
-        monsterLocationCol = col;
-        
-        // update the radar grid to show that something was detected at the specified location
-        currentScan[row][col] = true;
+        monsterLocationRows.set(0, row);
+        monsterLocationCols.set(0, col);
+    }
+    
+    public void setMonsterLocation(int row, int col, int monsterNumber)
+    {
+        // remember the row and col of the monster's location
+        monsterLocationRows.set(monsterNumber, row);
+        monsterLocationCols.set(monsterNumber, col);
     }
     
      /**
@@ -142,7 +174,7 @@ public class Radar
      */
     public int getNumCols()
     {
-        return currentScan[0].length;
+    return currentScan[0].length;
     }
     
     /**
@@ -159,19 +191,37 @@ public class Radar
      * Sets cells as falsely triggering detection based on the specified probability
      * 
      */
-    private void injectNoise()
+    public void injectNoise()
     {
         // Iterate through all cells in the currentScan 2D array to inject noise by setting false positives.
         // The noiseFraction instance variable is the probability that a given cell will be
         // detected as a false positive. Use the Math.random method to determine if each cell should be set
         // as a false positive.
         
-        
-        //
-        // !!! add code here !!!
-        //
-        
+        for (int i = 0; i < currentScan.length; i++)
+        {
+            for (int j = 0; j < currentScan[i].length; j++)
+            {
+                if (Math.random() <= noiseFraction)
+                {
+                    currentScan[i][j] = true;
+                }
+            }
+        }
         
     }
     
+    public void injectMonster(int monsterLocationRow, int monsterLocationCol)
+    {
+        monsterLocationRows.add(monsterLocationRow);
+        monsterLocationCols.add(monsterLocationCol);
+    }
+    
+    public void summonMonsters()
+    {
+        for (int i = 0;  i < monsterLocationRows.size(); i++)
+        {
+            currentScan[monsterLocationRows.get(i)][monsterLocationCols.get(i)] = true;
+        }
+    }
 }

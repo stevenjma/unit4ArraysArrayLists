@@ -3,17 +3,26 @@ import java.util.Scanner;
 
 public class TopSale
 {
-    public ArrayList<String> names = new ArrayList<String>();
-    public ArrayList<Double> totals = new ArrayList<Double>();
+    public ArrayList<String> customer = new ArrayList<String>();
     
-
+    public TopSale()
+    {
+        Scanner s = new Scanner(System.in);
+        
+        String a = "";
+        
+        while (a != "q")
+        {
+            System.out.println("Enter a name, or enter 'q' to quit.");
+            customer.add(s.next());
+        }
+    }
     
     public void addSale(String customerName, double amount)
     {
-        for (int i = 0; i <= names.size(); i++)
+        for (int i = 0; i <= customer.size(); i++)
         {
-          names.add(customerName);
-          totals.add(amount);
+          customer.add(amount);
         }
     }
     public String nameofBestCustomer()
@@ -34,8 +43,9 @@ public class TopSale
     
     public static void main(String[] args)
     {
-        
-        starter.addSale("Bob", 2.50);
+        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<Double> totals = new ArrayList<Double>();
+        names.addSale("Bob", 2.50);
         starter.addSale("Bob", 2.50);
         starter.addSale("George", 8.00);
         starter.addSale("Andrew", 1.00);
